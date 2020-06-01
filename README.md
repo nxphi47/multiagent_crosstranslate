@@ -4,6 +4,10 @@
 These guidelines demonstrate the steps to train multiple unsupervised MT agents and then generate synthetic parallel data. 
 After that, we run a supervised MT as the final model. 
 
+#### Pretrained model (WMT'14 En-Fr)
+Download WMT'14 En-Fr pretrained model and test data: [here](https://drive.google.com/file/d/1NV8d7l-RN9apa3MPA08_yvDEWv3_vkcN/view?usp=sharing)
+
+
 #### 0. Installation
 
 ```bash
@@ -152,3 +156,62 @@ fairseq-preprocess --source-lang en --target-lang fr \
 #### 6. Run supervised MT 
 
 Run supervised MT following big Transformer in [Fairseq](https://github.com/pytorch/fairseq/tree/master/examples/scaling_nmt)
+
+```bash
+
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+export seed=1234
+
+export data_dir=translate_enfr_unmt_2stage_base_aug_wmt_bpe60k
+export save_dir=train_models/translate_enfr_unmt_2stage_base_aug_wmt_bpe60k/transform_big_enfr_s${seed}
+mkdir -p $save_dir
+
+export src_lang=en
+export tgt_lang=fr
+
+export updates=15000
+export dropout=0.1
+export att_dropout=0
+export updates=35000
+export avg_num=5
+export lr=0.0005
+export upfreq=16
+export maxtokens=7168
+
+# train model
+fairseq-train \
+    ${data_dir} \
+    -s $src_lang -t $tgt_lang \
+    --arch transformer_wmt_en_de_big --share-all-embeddings \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+    --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+    --dropout 0.1 --attention-dropout 0 --weight-decay 0.0 \
+    --criterion label_smoothed_cross_entropy \
+    --task translation \
+    --label-smoothing 0.1 \
+    --max-tokens ${maxtokens} \
+    --max-update $updates \
+    --keep-last-epochs 20 \
+    --validate-interval 1 \
+    --save-dir ${save_dir} \
+    --ddp-backend no_c10d \
+    --seed ${seed} \
+    --fp16  --update-freq ${upfreq} --log-interval 10000 --no-progress-bar 
+
+# average checkpoints
+python average_checkpoints.py --inputs $save_dir --num-epoch-checkpoints 5 --checkpoint-upper-bound 15 --output $save_dir/avg.pt
+
+# generate translation
+fairseq-generate $data_dir -s $src_lang -t $tgt_lang --path $save_dir/avg.pt --max-tokens 4000 --quiet --remove-bpe --beam 5 --lenpen 3
+
+```
+
+#### Using the pretrained model
+
+```bash
+tar -xzvf macd_umt_enfr_big.tar.gz
+
+
+fairseq-generate macd_umt_enfr_big/translate_enfr_unmt_macd_l2n2_wmt_bpe60k -s en -t fr --path macd_umt_enfr_big/enfr.checkpoint.pt --max-tokens 4000 --quiet --remove-bpe --beam 5 --lenpen 3
+
+```
