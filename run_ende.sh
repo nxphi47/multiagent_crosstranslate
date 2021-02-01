@@ -6,7 +6,6 @@ set -e
 #---- version 3
 
 # version 3 for de-en
-#export data=mass_fil-de-en
 export data=de-en
 export src=de
 export tgt=en
@@ -38,11 +37,11 @@ export fast_beam=true
 export infer_single_model=false
 export infer_single_mass=false
 export xlmmass_reverse=false
-export xlm_path=dumped/pretrained_models/checkpoint.big.deen.pretxlm.s2546.pth
-export mass_path=dumped/pretrained_models/mass_ft_ende_1024.pth
+#export xlm_path=dumped/pretrained_models/checkpoint.big.deen.pretxlm.s2546.pth
+#export mass_path=dumped/pretrained_models/mass_ft_ende_1024.pth
 
 export arch=mlm
-export pretrain_path=dumped/pretrained_models/${arch}_ende_1024.pth
+#export pretrain_path=dumped/pretrained_models/${arch}_ende_1024.pth
 export reload_model_s="--reload_model ${pretrain_path},${pretrain_path}"
 #export reload_model_s="  "
 
