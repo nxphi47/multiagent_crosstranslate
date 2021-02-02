@@ -1,8 +1,11 @@
 # Multi-Agent Cross-Translated Diversification
 ## ICML Submission
 
-
 These guidelines demonstrate the steps to run CBD on the WMT En-De
+
+### Finetuned model
+
+Finetuned model WMT En-De: [here](https://www.dropbox.com/s/qi02mbeh39cpow8/checkpoint1.infer.pth?dl=0)
 
 #### 0. Installation
 
