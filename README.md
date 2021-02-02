@@ -18,7 +18,7 @@ Following instructions from [MASS-paper](https://github.com/microsoft/MASS) to c
 
 #### 2. Prepare pretrained model
 
-Download XLM finetuned model (theta_1): [here](), save it to bash variable `export xlm_path=...`
+Download XLM finetuned model (theta_1): [here](https://drive.google.com/file/d/1EiJSwR49fD3N-iBpAsy0jv-18CdOd1sN/view?usp=sharing), save it to bash variable `export xlm_path=...`
 
 Download MASS finetuned model (theta_2): [here](https://modelrelease.blob.core.windows.net/mass/mass_ft_ende_1024.pth), save it to `export mass_path=....`
 
