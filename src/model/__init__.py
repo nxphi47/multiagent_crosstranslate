@@ -104,7 +104,7 @@ def set_pretrain_emb(model, dico, word2id, embeddings):
                 % (n_found, len(dico), 100. * n_found / len(dico)))
 
 
-def build_model(params, dico):
+def build_model(params, dico, checkpoint=None):
     """
     Build model.
     """
@@ -151,7 +151,8 @@ def build_model(params, dico):
             set_pretrain_emb(decoder, dico, word2id, embeddings)
 
         # reload a pretrained model
-        if params.reload_model != '':
+        if params.reload_model != '' or checkpoint is not None:
+            path = checkpoint if checkpoint is not None else params.reload_model
             enc_path, dec_path = params.reload_model.split(',')
             assert not (enc_path == '' and dec_path == '')
 

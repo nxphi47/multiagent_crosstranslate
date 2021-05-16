@@ -251,39 +251,8 @@ def get_parser():
                         help="Early stopping, stop as soon as we have `beam_size` hypotheses, although longer ones may have better scores.")
     parser.add_argument("--nbest", type=int, default=None,
                         help="Beam size, default = 1 (greedy decoding)")
-    parser.add_argument("--mbeam_ae",  type=bool_flag, default=False,
-                        help="Activate mbeam for auto-encoder .")
-    parser.add_argument("--mbeam_ae_epoch", type=int, default=2,
-                        help="Length mbeam_ae_epoch.")
     parser.add_argument("--sampling_topp", type=float, default=-1,
                         help="sampling_topp.")
-    parser.add_argument("--mbeamct_epoch", type=int, default=-1,
-                        help="mbeamct_epoch.")
-
-    parser.add_argument("--stochastic_beam",  type=bool_flag, default=False,
-                        help="stochastic_beam .")
-    parser.add_argument("--stochastic_beam_infer",  type=bool_flag, default=False,
-                        help="stochastic_beam .")
-    parser.add_argument("--stochastic_beam_temp", type=float, default=1,
-                        help="stochastic_beam_temp")
-
-    parser.add_argument("--beam_sample_temp", type=float, default=None,
-                        help="beam_sample_temp sampling")
-    parser.add_argument("--hyps_size_multiple", type=int, default=1,
-                        help="hyps_size_multiple ")
-    parser.add_argument("--sample_topn", type=int, default=-1,
-                        help="sample_topn ")
-    parser.add_argument("--sample_topn_temp", type=float, default=None,
-                        help="sample_topn_temp ")
-    parser.add_argument("--sample_topn_replacement", type=bool_flag, default=False,
-                        help="sample_topn_replacement ")
-
-    parser.add_argument("--diverse_beam_groups", type=int, default=-1,
-                        help="diverse_beam_group ")
-    parser.add_argument("--diverse_beam_strength", type=float, default=-1,
-                        help="diverse_beam_strength ")
-    parser.add_argument("--initial_beam_epoch", type=int, default=-1,
-                        help="initial_beam_epoch ")
 
     parser.add_argument("--sec_bt_epoch", type=int, default=-1,
                         help="sec_bt_epoch for secondary run of BT using different decoding method")
@@ -292,23 +261,6 @@ def get_parser():
     parser.add_argument("--select_opt", type=int, default=0,
                         help="select_opt")
 
-    # evolution analysis
-    parser.add_argument("--split_evolve_diverge", type=int, default=-1,
-                        help="split_evolve_diverge")
-    parser.add_argument("--split_evolve_diverge_lang", type=str, default="",
-                        help="split_evolve_diverge_lang")
-    parser.add_argument("--limit_genetic_variation", type=bool_flag, default=False,
-                        help="limit_genetic_variation")
-    parser.add_argument("--limit_beam_size", type=int, default=1,
-                        help="limit_beam_size")
-    parser.add_argument("--limit_percent", type=float, default=0.5,
-                        help="limit_percent")
-    parser.add_argument("--limit_min_len", type=int, default=10,
-                        help="limit_min_len")
-    parser.add_argument("--limit_nbest", type=int, default=None,
-                        help="limit_nbest")
-    parser.add_argument("--limit_eval_default", type=bool_flag, default=False,
-                        help="limit_eval_default")
 
     # evaluation
     parser.add_argument("--eval_bleu", type=bool_flag, default=False,
@@ -346,17 +298,6 @@ def get_parser():
                         help="macd_version")
     parser.add_argument("--arch", type=str, default="mlm",
                         help="architecture, in (mlm,mass)")
-
-    parser.add_argument("--eval_evolve_train", type=bool_flag, default=True,
-                        help="eval_evolve_train analysis on evolution theory")
-    parser.add_argument("--eval_disruptive_event", type=bool_flag, default=False,
-                        help="eval_evolve_train analysis on evolution theory")
-    parser.add_argument("--eval_evolve_train_score", type=bool_flag, default=True,
-                        help="eval_evolve_train analysis on evolution theory")
-    parser.add_argument("--eval_evolve_train_reconstruct", type=bool_flag, default=True,
-                        help="eval_evolve_train analysis on evolution theory")
-    parser.add_argument("--eval_divergence", type=bool_flag, default=False,
-                        help="eval_divergence")
 
     # debug
     parser.add_argument("--debug_train", type=bool_flag, default=False,
@@ -415,43 +356,25 @@ def main(params):
 
     # build model
     if params.encoder_only:
-        model = build_model(params, data['dico'])
-    else:
-        try:
-            # build_func = build_model_multilang if (params.share_enc > -1 or params.share_dec > -1) else build_model
-            # logger.info('Build function: {}'.format(build_func.__name__))
-            # encoder, decoder = build_func(params, data['dico'])
-            # if params.mbeamct_epoch >= 0:
-            #     build_func_2nd = build_model_multilang if (params.share_enc > -1 or params.share_dec > -1) else build_model
-            #     logger.info('Build 2nd function: {}'.format(build_func_2nd.__name__))
-            #     encoder2, decoder2 = build_func_2nd(params, data['dico'], checkpoint=params.reload_2nd_model)
-            # else:
-            #     build_func_2nd = None
-            #     encoder2, decoder2 = None, None
-
-            build_func = build_model_multilang_fn if (params.share_enc > -1 or params.share_dec > -1) else build_model_fn
-            build_func1 = build_model
-            build_func2 = mass_build_model
-            logger.info('Build function 1: {}'.format(build_func1.__name__))
-            logger.info('Build function 2: {}'.format(build_func2.__name__))
-            encoder1, decoder1 = build_func1(params, data['dico'], checkpoint=params.reload_model_xlm)
-            encoder2, decoder2 = build_func2(params, data['dico'], checkpoint=params.reload_model_mass)
-            encoder, decoder = build_func(params, data['dico'])
-
-        except Exception as e:
-            # print(data)
-            raise e
+        # model = build_model(params, data['dico'])
+        raise ValueError('encoder_only invalid for cbd')
+    # else:
+    try:
+        build_func = build_model_multilang_fn if (params.share_enc > -1 or params.share_dec > -1) else build_model_fn
+        build_func1 = build_model
+        build_func2 = mass_build_model
+        logger.info('Build function 1: {}'.format(build_func1.__name__))
+        logger.info('Build function 2: {}'.format(build_func2.__name__))
+        encoder1, decoder1 = build_func1(params, data['dico'], checkpoint=params.reload_model_xlm)
+        encoder2, decoder2 = build_func2(params, data['dico'], checkpoint=params.reload_model_mass)
+        encoder, decoder = build_func(params, data['dico'])
+    except Exception as e:
+        raise e
 
     # build trainer, reload potential checkpoints / build evaluator
     if params.encoder_only:
-        # trainer = SingleTrainer(model, data, params)
-        # evaluator = SingleEvaluator(trainer, data, params)
         raise NotImplementedError
     else:
-        # if params.mbeamct_epoch >= 0:
-        #     trainer = EncDecMbeamCTTrainer(encoder, decoder, encoder2, decoder2, data, params)
-        # else:
-        #     trainer = EncDecTrainer(encoder, decoder, data, params)
         trainer = EncDecMACDmbeamOnlineTrainer(encoder, decoder, encoder1, decoder1, encoder2, decoder2, data, params)
         evaluator = MACDOnlineEvaluator(trainer, data, params)
 
@@ -466,12 +389,7 @@ def main(params):
     # set sampling probabilities for training
     set_sampling_probs(data, params)
     assert params.beam_size > 1
-    nbest = params.nbest
-    # assert params.nbest is not None and 1 <= params.nbest <= params.beam_size, 'nbest={}'.format(params.nbest)
-    training_step = 0
-    wrote = False
-    # language model training
-    switch_first_sec = False
+    # nbest = params.nbest
     for _ in range(params.max_epoch):
 
         logger.info("============ Starting epoch %i ... ============" % trainer.epoch)
@@ -483,19 +401,11 @@ def main(params):
             # MACD back-translation steps
             for lang1, lang2, lang3 in shuf_order(params.bt_steps):
                 direction1 = (lang1 == params.src_lang)
-                if nbest is None or nbest <= 1:
-                    first_sec = bool(np.random.randint(0, 2))
-                    trainer.bt_step_macd(
-                        lang1, lang2, lang3, params.lambda_bt, direction1, first_sec=first_sec, and_rev=True)
-                else:
-                    raise NotImplementedError('nbest > 1 not supported for version 2')
-
+                # if nbest is None or nbest <= 1:
+                first_sec = bool(np.random.randint(0, 2))
+                trainer.bt_step_macd(
+                    lang1, lang2, lang3, params.lambda_bt, direction1, first_sec=first_sec, and_rev=True)
             trainer.iter()
-
-            if params.filter_bleu > 0 and trainer.n_total_iter % params.report_filter_bleu == 0:
-                bleu_avg = trainer.onl_bleu_scorer.avg_bleu()
-                bleu_qualified = trainer.onl_bleu_scorer.avg_qualified_rate()
-                logger.info('--> Avg reconstruction BLEU: {}, avg_qualified: {}'.format(bleu_avg, bleu_qualified))
 
             if params.eval_per_steps > 0 and trainer.n_total_iter % params.eval_per_steps == 0 and trainer.n_total_iter > 0:
                 # eval mid
@@ -537,14 +447,6 @@ if __name__ == '__main__':
     parser = get_parser()
     params = parser.parse_args()
 
-    # mass and xlm initlization
-    # if params.arch == "mlm":
-    #     pass
-    # elif params.arch == "mass":
-    #     # remove AE training
-    #     params.lambda_ae = "0"
-    # else:
-    #     raise ValueError('arch parameters wrong: {}'.format(params.arch))
 
     if params.seed >= 0:
         print('| Set seed {}'.format(params.seed))

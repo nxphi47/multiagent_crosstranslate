@@ -3,9 +3,9 @@
 set -e
 
 
-#---- version 3
+#---- version 6
 
-# version 3 for de-en
+# version 6 for de-en
 export data=de-en
 export src=de
 export tgt=en
@@ -61,6 +61,6 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export optimizer=adam_inverse_sqrt,beta1=0.9,beta2=0.98,lr=0.0001
 #export CUDA_LAUNCH_BLOCKING=1 && bash train_online_macd.sh
 unset CUDA_LAUNCH_BLOCKING
-bash train_online_macd.sh
+bash run_cbd_online.sh
 
 

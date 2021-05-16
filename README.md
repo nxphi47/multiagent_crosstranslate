@@ -1,11 +1,30 @@
-# Multi-Agent Cross-Translated Diversification
-## ICML Submission
+# Cross-model Back-translated Distillationfor Unsupervised Machine Translation
+#### Accepted as conference paper at 38th International Conference on Machine Learning (ICML 2021).
+#### Authors: Xuan-Phi Nguyen, Shafiq Joty, Thanh-Tung Nguyen, Wu Kui, Ai Ti Aw
+
+Paper link: [https://arxiv.org/abs/1911.01986](https://arxiv.org/abs/1911.01986)
+
+# Citation
+
+Please cite as:
+
+```bibtex
+@incollection{nguyen2021cbd,
+title = {Cross-model Back-translated Distillation for Unsupervised Machine Translation},
+author = {Xuan-Phi Nguyen and Shafiq Joty and Thanh-Tung Nguyen and Wu Kui and Ai Ti Aw},
+booktitle = {38th International Conference on Machine Learning},
+year = {2021},
+}
+```
 
 These guidelines demonstrate the steps to run CBD on the WMT En-De
 
 ### Finetuned model
 
-Finetuned model WMT En-De: [here](https://www.dropbox.com/s/qi02mbeh39cpow8/checkpoint1.infer.pth?dl=0)
+Model | Train Dataset | Finetuned model
+---|---|---
+`WMT En-Fr` | [WMT English-French](not-ready) | model: [download](https://www.dropbox.com/s/qi02mbeh39cpow8/checkpoint1.infer.pth?dl=0) 
+`WMT En-De` | [WMT English-German](not-ready) | model: [download](https://drive.google.com/file/d/1PEH6sW3Vp2RuwLLblJNxUm7L18zHgXhz/view?usp=sharing) 
 
 #### 0. Installation
 
@@ -13,7 +32,6 @@ Finetuned model WMT En-De: [here](https://www.dropbox.com/s/qi02mbeh39cpow8/chec
 ./install.sh
 pip install fairseq==0.8.0 --progress-bar off
 ```
-
 
 #### 1. Prepare data
 
